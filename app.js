@@ -21,7 +21,10 @@ db.once('open', () => {
 	console.log('mongodb connected!')
 })
 
-app.engine('handlebars', exphdbs({ defaultLayout: 'main' }))
+app.engine(
+	'handlebars',
+	exphdbs({ defaultLayout: 'main', extname: 'handlebars' })
+)
 app.set('view engine', 'handlebars')
 app.use(bodyParser.urlencoded({ extended: true }))
 
