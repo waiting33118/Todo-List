@@ -1,7 +1,7 @@
 const express = require('express')
 const exphdbs = require('express-handlebars')
-const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const Todo = require('./models/todo')
 const app = express()
 const port = 3000
 
@@ -21,17 +21,23 @@ db.once('open', () => {
 	console.log('mongodb connected!')
 })
 
+//模板引擎參數設定
 app.engine(
 	'handlebars',
-	exphdbs({ defaultLayout: 'main', extname: 'handlebars' })
+	exphdbs({ defaultLayout: 'main', extname: 'handlebars' }) //可以縮寫，但目前不使用
 )
+//模板啟用
 app.set('view engine', 'handlebars')
-app.use(bodyParser.urlencoded({ extended: true }))
 
+//主畫面路由
 app.get('/', (req, res) => {
-	res.render('home')
+	Todo.find()
+		.lean()
+		.then((todos) => res.render('home', { todos }))
+		.catch((error) => console.error(error))
 })
 
+//伺服器監聽
 app.listen(port, () => {
 	console.log(`The Server is running on http://127.0.0.1:${port}`)
 })
