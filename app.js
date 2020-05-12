@@ -31,10 +31,10 @@ app.set('view engine', 'handlebars')
 
 //主畫面路由
 app.get('/', (req, res) => {
-	Todo.find()
-		.lean()
-		.then((todos) => res.render('home', { todos }))
-		.catch((error) => console.error(error))
+	Todo.find() //取出Todo Model Data
+		.lean() //轉變格式為Javascript Object
+		.then((todos) => res.render('home', { todos })) //將資料傳入樣板
+		.catch((error) => console.error(error)) //handling error
 })
 
 //伺服器監聽
