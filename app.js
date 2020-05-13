@@ -1,5 +1,6 @@
 const express = require('express')
 const exphdbs = require('express-handlebars')
+const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const Todo = require('./models/todo')
 const app = express()
@@ -28,6 +29,8 @@ app.engine(
 )
 //模板啟用
 app.set('view engine', 'handlebars')
+//設定bodyParser 參數
+app.use(bodyParser.urlencoded({ extended: true }))
 
 //主畫面路由
 app.get('/', (req, res) => {
@@ -35,6 +38,21 @@ app.get('/', (req, res) => {
 		.lean() //轉變格式為Javascript Object
 		.then((todos) => res.render('home', { todos })) //將資料傳入樣板
 		.catch((error) => console.error(error)) //handling error
+})
+
+//新增todo路由
+app.get('/todos/new', (req, res) => {
+	res.render('new')
+})
+
+//提交表單
+app.post('/todos', (req, res) => {
+	const formData = req.body.name
+	Todo.create({ name: formData })
+		.then(() => {
+			res.redirect('/')
+		})
+		.catch((error) => console.error(error))
 })
 
 //伺服器監聽
