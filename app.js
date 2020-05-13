@@ -40,9 +40,18 @@ app.get('/', (req, res) => {
 		.catch((error) => console.error(error)) //handling error
 })
 
-//新增todo路由
+//新增todo
 app.get('/todos/new', (req, res) => {
 	res.render('new')
+})
+
+//進入單一項目(詳細資料)
+app.get('/todos/:_id', (req, res) => {
+	const id = req.params._id
+	Todo.findById(id)
+		.lean()
+		.then((todo) => res.render('detail', { todo }))
+		.catch((error) => console.error(error))
 })
 
 //提交表單
