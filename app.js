@@ -57,22 +57,43 @@ app.get('/todos/:_id', (req, res) => {
 //進入單一項目(修改)
 app.get('/todos/:_id/edit', (req, res) => {
 	const id = req.params._id
-	const name = req.params.name
 	Todo.findById(id)
-	res.render('edit')
+		.lean()
+		.then((todo) => {
+			res.render('edit', { todo })
+		})
+		.catch((error) => console.error(error))
 })
 
-//TODO
-// 尚未完成 修改的GET request
-//         POST 提交表單
-
-//提交表單
+//接收新增表單
 app.post('/todos', (req, res) => {
 	const formData = req.body.name
 	Todo.create({ name: formData })
 		.then(() => {
 			res.redirect('/')
 		})
+		.catch((error) => console.error(error))
+})
+
+//接收修改表單
+app.post('/todos/:_id/edit', (req, res) => {
+	const id = req.params._id
+	const name = req.body.name
+	Todo.findById(id)
+		.then((todo) => {
+			todo.name = name
+			todo.save()
+		})
+		.then(() => res.redirect(`/todos/${id}`))
+		.catch((error) => console.error(error))
+})
+
+//接收刪除表單
+app.post('/todos/:_id/delete', (req, res) => {
+	const id = req.params._id
+	Todo.findById(id)
+		.then((todo) => todo.remove())
+		.then(res.redirect('/'))
 		.catch((error) => console.error(error))
 })
 
