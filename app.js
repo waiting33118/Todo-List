@@ -1,6 +1,7 @@
 const express = require('express')
 const exphdbs = require('express-handlebars')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 const Todo = require('./models/todo')
 const app = express()
@@ -32,21 +33,24 @@ app.set('view engine', 'handlebars')
 //設定bodyParser 參數
 app.use(bodyParser.urlencoded({ extended: true }))
 
+//覆寫前端Method
+app.use(methodOverride('_method'))
+
 //主畫面路由
 app.get('/', (req, res) => {
 	Todo.find() //取出Todo Model Data
 		.lean() //轉變格式為Javascript Object
-		.sort('_id') //正排序:直接傳入要排序的項目 負排序: 前面加-  EX: -_id
+		.sort('_id') //升冪:直接傳入要排序的項目 降冪: 前面加-  EX: -_id
 		.then((todos) => res.render('home', { todos })) //將資料傳入樣板
 		.catch((error) => console.error(error)) //handling error
 })
 
-//新增todo
+//新增todo頁面
 app.get('/todos/new', (req, res) => {
 	res.render('new')
 })
 
-//進入單一項目(詳細資料)
+//進入單一詳細資料項目
 app.get('/todos/:_id', (req, res) => {
 	const id = req.params._id
 	Todo.findById(id)
@@ -55,7 +59,7 @@ app.get('/todos/:_id', (req, res) => {
 		.catch((error) => console.error(error))
 })
 
-//進入單一項目(修改)
+//進入單一修改項目頁面
 app.get('/todos/:_id/edit', (req, res) => {
 	const id = req.params._id
 	Todo.findById(id)
@@ -66,7 +70,7 @@ app.get('/todos/:_id/edit', (req, res) => {
 		.catch((error) => console.error(error))
 })
 
-//接收新增表單
+//新增TODO
 app.post('/todos', (req, res) => {
 	const formData = req.body.name
 	Todo.create({ name: formData })
@@ -76,8 +80,8 @@ app.post('/todos', (req, res) => {
 		.catch((error) => console.error(error))
 })
 
-//接收修改表單
-app.post('/todos/:_id/edit', (req, res) => {
+//修改TODO
+app.put('/todos/:_id', (req, res) => {
 	const id = req.params._id
 	const { name, isDone } = req.body
 	Todo.findById(id)
@@ -90,8 +94,8 @@ app.post('/todos/:_id/edit', (req, res) => {
 		.catch((error) => console.error(error))
 })
 
-//接收刪除表單
-app.post('/todos/:_id/delete', (req, res) => {
+//刪除TODO
+app.delete('/todos/:_id', (req, res) => {
 	const id = req.params._id
 	Todo.findById(id)
 		.then((todo) => todo.remove())
