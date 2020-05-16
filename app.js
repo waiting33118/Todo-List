@@ -78,10 +78,11 @@ app.post('/todos', (req, res) => {
 //接收修改表單
 app.post('/todos/:_id/edit', (req, res) => {
 	const id = req.params._id
-	const name = req.body.name
+	const { name, isDone } = req.body
 	Todo.findById(id)
 		.then((todo) => {
 			todo.name = name
+			todo.isDone = isDone === 'on'
 			todo.save()
 		})
 		.then(() => res.redirect(`/todos/${id}`))
