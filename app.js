@@ -6,8 +6,8 @@ const mongoose = require('mongoose')
 const routes = require('./routes')
 require('./config/mongoose')
 const app = express()
-const port = 3000
-
+const PORT = process.env.PORT || 3000
+const HOST = process.env.HOST || '127.0.0.1'
 //模板引擎參數設定
 app.engine(
 	'handlebars',
@@ -25,6 +25,6 @@ app.use(methodOverride('_method'))
 app.use(routes)
 
 //伺服器監聽
-app.listen(port, () => {
-	console.log(`The Server is running on http://127.0.0.1:${port}`)
+app.listen(PORT, HOST, () => {
+	console.log(`The Server is running on http://${HOST}:${PORT}`)
 })
