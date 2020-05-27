@@ -24,5 +24,5 @@ app.use(routes)
 
 // 伺服器監聽
 app.listen(PORT, () => {
-  console.log(`The Server is running on http://127.0.0.1:${PORT}`)
+  console.log(`The Server is running on Port:${PORT}`)
 })
