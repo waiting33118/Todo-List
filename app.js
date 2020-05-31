@@ -1,11 +1,13 @@
 const express = require('express')
 const exphdbs = require('express-handlebars')
 const bodyParser = require('body-parser')
+const session = require('express-session')
 const methodOverride = require('method-override')
 const routes = require('./routes')
 require('./config/mongoose')
 const app = express()
 const PORT = process.env.PORT || 3000
+
 // 模板引擎參數設定
 app.engine(
   'handlebars',
@@ -13,11 +15,21 @@ app.engine(
 )
 // 模板啟用
 app.set('view engine', 'handlebars')
+
 // 設定bodyParser 參數
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // 覆寫前端Method
 app.use(methodOverride('_method'))
+
+// 使用session狀態
+app.use(
+  session({
+    secret: 'oriforever',
+    resave: false,
+    saveUninitialized: true
+  })
+)
 
 // 使用路由
 app.use(routes)
