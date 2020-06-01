@@ -1,7 +1,7 @@
 const express = require('express')
+const session = require('express-session')
 const exphdbs = require('express-handlebars')
 const bodyParser = require('body-parser')
-const session = require('express-session')
 const passport = require('passport')
 const methodOverride = require('method-override')
 
@@ -15,14 +15,6 @@ app.engine(
   'handlebars',
   exphdbs({ defaultLayout: 'main', extname: 'handlebars' }) // 可以縮寫，但目前不使用
 )
-// 模板啟用
-app.set('view engine', 'handlebars')
-
-// 設定bodyParser 參數
-app.use(bodyParser.urlencoded({ extended: true }))
-
-// 覆寫前端Method
-app.use(methodOverride('_method'))
 
 // 使用express-session
 app.use(
@@ -32,6 +24,15 @@ app.use(
     saveUninitialized: true
   })
 )
+
+// 模板啟用
+app.set('view engine', 'handlebars')
+
+// 設定bodyParser 參數
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// 覆寫前端Method
+app.use(methodOverride('_method'))
 
 // 使用passport
 app.use(passport.initialize())
