@@ -37,6 +37,13 @@ app.use(methodOverride('_method'))
 // 使用passport套件
 usePassport(app)
 
+// 使用req資訊
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated()
+  res.locals.user = req.user
+  next()
+})
+
 // 使用路由
 app.use(routes)
 
