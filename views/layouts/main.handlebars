@@ -13,7 +13,9 @@
   <header>
     <nav>
       <div class="navbar navbar-dark bg-primary justify-content-between">
-        <a class="navbar-brand" href="/">{{#if isAuthenticated}}{{user.name}}{{/if}}TODO LIST</a>
+        <a class="navbar-brand" href="/">
+          {{#if isAuthenticated}}{{user.name}}'s{{/if}}
+          TODO LIST</a>
         {{#if isAuthenticated}}
         <a href="/users/logout" class="btn btn-outline-light px-4">登出</a>
         {{else}}
