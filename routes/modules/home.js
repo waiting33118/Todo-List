@@ -4,7 +4,8 @@ const router = express.Router()
 
 // 主畫面路由
 router.get('/', (req, res) => {
-  Todo.find() // 取出Todo Model Data
+  const userId = req.user._id
+  Todo.find({ userId }) // 取出Todo Model Data
     .lean() // 轉變格式為Javascript Object
     .sort('_id') // 升冪:直接傳入要排序的項目 降冪: 前面加-  EX: -_id
     .then((todos) => res.render('home', { todos })) // 將資料傳入樣板
