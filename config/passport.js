@@ -8,23 +8,26 @@ module.exports = (app) => {
   app.use(passport.session())
   // 本地策略
   passport.use(
-    new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-      User.findOne({ email })
-        .then((user) => {
-          if (!user) {
-            return done(null, false, {
-              message: '信箱尚未被註冊!'
-            })
-          }
-          if (user.password !== password) {
-            return done(null, false, {
-              message: '密碼錯誤!'
-            })
-          }
-          return done(null, user)
-        })
-        .catch((err) => done(err, false))
-    })
+    new LocalStrategy(
+      { usernameField: 'email', passReqToCallback: true },
+      (req, email, password, done) => {
+        User.findOne({ email })
+          .then((user) => {
+            if (!user) {
+              return done(
+                null,
+                false,
+                req.flash('wrong_msg', '此帳號尚未註冊！')
+              )
+            }
+            if (user.password !== password) {
+              return done(null, false, req.flash('wrong_msg', '密碼錯誤'))
+            }
+            return done(null, user)
+          })
+          .catch((err) => done(err, false))
+      }
+    )
   )
   // 序列化&反序列化
   passport.serializeUser((user, done) => {
