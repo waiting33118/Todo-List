@@ -5,7 +5,8 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/todo-list'
 // connect mongodb
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true
 })
 // 取得資料庫連線狀態
 const db = mongoose.connection
