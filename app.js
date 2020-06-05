@@ -5,11 +5,15 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const flash = require('connect-flash')
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const routes = require('./routes')
 const usePassport = require('./config/passport')
 require('./config/mongoose')
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT
 
 // 模板引擎參數設定
 app.engine(
@@ -20,7 +24,7 @@ app.engine(
 // 使用express-session
 app.use(
   session({
-    secret: 'oriforever is my secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true
   })
